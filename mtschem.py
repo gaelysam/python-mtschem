@@ -50,7 +50,17 @@ from io import BytesIO
 bulk_dtype = np.dtype([("node", ">u2"), ("prob", "u1"), ("force", "?"), ("param2", "u1")])
 
 class Schem:
-	def __init__(self, filename):
+	def __init__(self, *args):
+		if isinstance(args[0], str):
+			self.load(args[0])
+		else:
+			shape = tuple(args[:3])
+			self.version = 4
+			self.yprobs = np.zeros(shape[1], dtype="u1")
+			self.nodes = ["air"]
+			self.data = np.zeros(shape, dtype=bulk_dtype)
+
+	def load(self, filename):
 		f = open(filename, "rb")
 
 		if f.read(4) != b"MTSM":

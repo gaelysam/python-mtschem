@@ -74,7 +74,7 @@ class Schem:
 		data = np.zeros(rev_size, dtype=bulk_dtype)
 
 		data["node"] = np.fromstring(bulk.read(volume*2), dtype=">u2").reshape(rev_size)
-		data["prob"], data["force"] = np.divmod(np.fromstring(bulk.read(volume), dtype="u1").reshape(rev_size), 2)
+		data["force"], data["prob"] = np.divmod(np.fromstring(bulk.read(volume), dtype="u1").reshape(rev_size), 128)
 		data["param2"] = np.fromstring(bulk.read(volume), dtype="u1").reshape(rev_size)
 
 		self.data = data.swapaxes(0, 2) # data axis order is Z[Y[X]], we want X[Y[Z]]
@@ -104,7 +104,7 @@ class Schem:
 		bulk = BytesIO()
 
 		bulk.write(data["node"].tobytes())
-		bulk.write((data["prob"]*2 + data["force"]).astype("u1").tobytes())
+		bulk.write((data["force"] * 128 + data["prob"]).astype("u1").tobytes())
 		bulk.write(data["param2"].tobytes())
 
 		f.write(zlib.compress(bulk.getbuffer(), compression))

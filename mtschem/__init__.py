@@ -2,47 +2,6 @@
 # Inspired by python-minetest library by LeMagnesium: https://github.com/LeMagnesium/python-minetest/blob/3d81909/libminetest/schematics.py
 # Using NumPy for speed and memory efficiency (more adapted to huge schematics)
 
-# To import the library:
-#     import mtschem
-
-# To load a schematic:
-#     my_schem = Schem("path/to/my_schem.mts")
-
-# The data are stored in my_schem.data in the form of a X*Y*Z array of structured elements.
-# To get the shape of the schematic, as a tuple:
-#     shape = my_schem.data.shape
-# To get the volume:
-#     volume = my_schem.data.size
-
-# To get the element at position (3,5,7):
-#     element = my_schem.data[3,5,7]
-
-# Each element has 4 fields:
-#     - element["node"] is the node ID (rank on the node list, see below)
-#     - element["prob"] is its probability (0-127)
-#     - element["force"] boolean indicating whether to force replacement of existing nodes when the schematic is placed
-#     - element["param2"] param2 of the node
-
-# To get an array of node IDs:
-#     node_ids = my_schem.data["node"]
-# Also works for prob, force and param2.
-
-# The data array can be freely modified, as long as you keep the structure with the 4 named fields. Values and array size can be changed.
-
-# Y-Slice probabilities:
-#     my_schem.yprobs[6] is the probability to get slice at y=6 generated (0-127)
-# If you use specific values for yprobs, make sure the size of this array follows the Y size of the data schematic. If you always use 127, you can neglect this.
-
-# Get the list of the existing nodes:
-#     node_list = my_schem.nodes
-
-# Use that list to get the node name:
-#     node_name = node_list[element["node"]]
-# Keep the node name list up-to-date if you add new nodes to the data.
-
-# To export the modified schematic:
-#     my_schem.save("path/to/output_schem.mts")
-
 import numpy as np
 import zlib
 from io import BytesIO

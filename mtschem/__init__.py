@@ -49,6 +49,8 @@ class Schem:
 		self.data = data.swapaxes(0, 2) # data axis order is Z[Y[X]], we want X[Y[Z]]
 
 	def save(self, filename, compression=9):
+		self.cleanup_nodelist()
+
 		f = open(filename, "wb")
 
 		f.write(b"MTSM")
@@ -65,8 +67,6 @@ class Schem:
 			namelength = len(node)
 			f.write(np.uint16(namelength).newbyteorder(">").tobytes())
 			f.write(node.encode("utf-8"))
-
-		self.cleanup_nodelist()
 
 		data = self.data.swapaxes(0, 2) # get MTS's axes order again
 

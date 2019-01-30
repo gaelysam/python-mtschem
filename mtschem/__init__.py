@@ -100,6 +100,7 @@ class Schem:
 		
 		transform_list = np.zeros(len(self.nodes), dtype=">u2")
 		duplicates = 0
+		update_array = False
 		for new_i, old_i in enumerate(existing_nodes):
 			i = new_i - duplicates
 			if new_nodelist[i] in new_nodelist[:i]: # If this node is a duplicate
@@ -108,9 +109,12 @@ class Schem:
 				duplicates += 1 # Keep count of removed duplicates to offset
 				continue
 			transform_list[old_i] = i
+			if old_i != i:
+				update_array = True
 
 		self.nodes = new_nodelist
-		self.data["node"] = transform_list[self.data["node"]]
+		if update_array:
+			self.data["node"] = transform_list[self.data["node"]]
 
 	def __getitem__(self, slices):
 		data = self.data[slices].copy()

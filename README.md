@@ -101,19 +101,35 @@ def count_node(schem, nodename):
     return np.count_nonzero(schem.data["node"] == id)
 ```
 
+### Create a schematic from a given part of another schematic
+`Schem` objects can be directly indexed by coordinates. This returns a new `Schem` object representing the given part of the initial schematic. This is useful for dividing a large schematic into reasonably sized parts, or to prune a schematic containing unnecessary blank margins.
+```python3
+import mtschem
+schem = mtschem.Schem("thing.mts")
+
+bottom = schem[:,:10,:] # Here we take the 10 bottom lines of thing.mts
+bottom.save("thing_bottom.mts")
+
+middle = schem[:,10:20,:] # Then the 10 lines above
+middle.save("thing_middle.mts")
+
+top = schem[:,20:,:] # And finally, from line 20 to the end
+top.save("thing_top.mts")
+```
+
 ### Find the list of nodes present in a given part of the schematic
 Using the Numpy function `unique` to give the list of existing values in an array.
 ```python3
 import numpy as np
 def list_nodes_in(schem, minp, maxp): # minp and maxp 3-tuples
-    part = schem.data["node"][
+    subschem = schem[
             minp[0]:maxp[0]+1,
             minp[1]:maxp[1]+1,
             minp[2]:maxp[2]+1,
     ]
-    id_list = np.unique(part)
+    id_list = np.unique(subschem.data["node"])
     node_list = []
     for id in id_list:
-        node_list.append(schem.nodes[id])
+        node_list.append(subschem.nodes[id])
     return node_list
 ```
